@@ -55,7 +55,7 @@ df['Self_Employed'].fillna('No',inplace=True)
 table = df.pivot_table(values='LoanAmount', index='Self_Employed' ,columns='Education', aggfunc=np.median)
 # Define function to return value of this pivot_table
 def fage(x):
- return table.loc[x['Self_Employed'],x['Education']]
+    return table.loc[x['Self_Employed'],x['Education']]
 # Replace missing values
 df['LoanAmount'].fillna(df[df['LoanAmount'].isnull()].apply(fage, axis=1), inplace=True)
 
