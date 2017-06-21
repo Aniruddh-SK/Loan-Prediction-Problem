@@ -46,9 +46,8 @@ ax2.set_title("Probability of getting loan by credit history")
 temp3 = pd.crosstab(df['Credit_History'], df['Loan_Status'])
 temp3.plot(kind='bar', stacked=True, color=['red','blue'], grid=False)
 
+# Checking for missing 
 df.apply(lambda x: sum(x.isnull()),axis=0)
-
-df['LoanAmount'].fillna(df['LoanAmount'].mean(), inplace=True)
 
 df['Self_Employed'].fillna('No',inplace=True)
 
