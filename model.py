@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib as plt
+%matplotlib gtk
 
 df = pd.read_csv("/home/user/Desktop/Data/train.csv") #Reading the dataset in a dataframe using Pandas
 
@@ -46,15 +47,21 @@ ax2.set_title("Probability of getting loan by credit history")
 temp3 = pd.crosstab(df['Credit_History'], df['Loan_Status'])
 temp3.plot(kind='bar', stacked=True, color=['red','blue'], grid=False)
 
-# Checking for missing 
+#Checking for missing values
 df.apply(lambda x: sum(x.isnull()),axis=0)
 
+df['Gender'].fillna('Male',inplace=True)
+df['Married'].fillna('Yes',inplace=True)
+df['Dependents'].fillna(0,inplace=True)
 df['Self_Employed'].fillna('No',inplace=True)
+df['Credit_History'].fillna(1,inplace=True)
+df['Loan_Amount_Term'].fillna(360,inplace=True)
 
 table = df.pivot_table(values='LoanAmount', index='Self_Employed' ,columns='Education', aggfunc=np.median)
+
 # Define function to return value of this pivot_table
 def fage(x):
-    return table.loc[x['Self_Employed'],x['Education']]
+	return table.loc[x['Self_Employed'],x['Education']]
 # Replace missing values
 df['LoanAmount'].fillna(df[df['LoanAmount'].isnull()].apply(fage, axis=1), inplace=True)
 
@@ -81,8 +88,10 @@ from sklearn import metrics
 
 #Generic function for making a classification model and accessing performance:
 def classification_model(model, data, predictors, outcome):
+
   #Fit the model:
   model.fit(data[predictors],data[outcome])
+  # model.fit(data['predictors'],data['outcome'])
   
   #Make predictions on training set:
   predictions = model.predict(data[predictors])
@@ -142,3 +151,4 @@ print featimp
 model = RandomForestClassifier(n_estimators=25, min_samples_split=25, max_depth=7, max_features=1)
 predictor_var = ['TotalIncome_log','LoanAmount_log','Credit_History','Dependents','Property_Area']
 classification_model(model, df,predictor_var,outcome_var)
+
